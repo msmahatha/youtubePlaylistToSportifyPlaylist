@@ -1,38 +1,59 @@
-# YouTube to Spotify Playlist Converter
+# 🎵 YouTube → Spotify Playlist Converter  
 
-A Spring Boot REST API service that converts YouTube playlists to Spotify playlists using OAuth2 authentication.
+> **Convert your YouTube playlists into Spotify playlists seamlessly with OAuth2 authentication!**  
 
-## Features
+<p align="center">
+  <img src="https://img.shields.io/badge/Java-17-red?style=for-the-badge&logo=java" />
+  <img src="https://img.shields.io/badge/Spring%20Boot-3.x-brightgreen?style=for-the-badge&logo=springboot" />
+  <img src="https://img.shields.io/badge/Maven-Build-blue?style=for-the-badge&logo=apachemaven" />
+  <img src="https://img.shields.io/badge/Spotify-API-1DB954?style=for-the-badge&logo=spotify&logoColor=white" />
+  <img src="https://img.shields.io/badge/YouTube-API-FF0000?style=for-the-badge&logo=youtube&logoColor=white" />
+</p>
 
-- 🎵 Convert YouTube playlists to Spotify playlists
-- 🔐 Secure OAuth2 authentication with Spotify
-- 🎯 Smart track matching using YouTube video titles
-- 📊 Detailed conversion reports with matched/skipped tracks
-- 🔄 Asynchronous processing for large playlists
-- 📖 OpenAPI/Swagger documentation
-- 🐳 Docker support (optional)
+<p align="center">
+  <img src="https://img.shields.io/github/license/your-username/your-repo?style=flat-square&color=yellow" />
+  <img src="https://img.shields.io/github/workflow/status/your-username/your-repo/Build/main?style=flat-square&logo=github" />
+  <img src="https://img.shields.io/docker/pulls/your-dockerhub-id/youtube-spotify-converter?style=flat-square&logo=docker&color=2496ED" />
+</p>
 
-## Tech Stack
+---
 
-- **Java 17**
-- **Spring Boot 3.x**
-- **Maven** - Dependency management
-- **Spring Security OAuth2** - Spotify authentication
-- **WebClient** - REST API calls
-- **H2 Database** - In-memory storage
-- **Lombok** - Boilerplate reduction
-- **SpringDoc OpenAPI** - API documentation
+## ✨ Features  
 
-## Prerequisites
+✅ Convert YouTube playlists ➡️ Spotify playlists  
+✅ 🔐 **Secure OAuth2 authentication** with Spotify  
+✅ 🎯 **Smart track matching** using YouTube video titles  
+✅ 📊 **Detailed reports** → matched ✅ & skipped ❌ tracks  
+✅ 🔄 **Async processing** for large playlists  
+✅ 📖 **OpenAPI/Swagger docs** included  
+✅ 🐳 **Docker support** (optional)  
 
-1. **Java 17** or higher
-2. **Maven 3.6+**
-3. **Spotify Developer Account** - [Create one here](https://developer.spotify.com/)
-4. **YouTube Data API Key** - [Get one here](https://developers.google.com/youtube/v3/getting-started)
+---
 
-## Setup Instructions
+## ⚡ Tech Stack  
 
-### 1. Clone the Repository
+- ☕ **Java 17**  
+- 🌱 **Spring Boot 3.x**  
+- 🔒 **Spring Security OAuth2**  
+- 🌐 **WebClient** for API calls  
+- 💾 **H2 Database** (in-memory)  
+- 🧰 **Lombok**  
+- 📘 **SpringDoc OpenAPI**  
+
+---
+
+## 🔧 Prerequisites  
+
+1. **Java 17+**  
+2. **Maven 3.6+**  
+3. 🎵 [Spotify Developer Account](https://developer.spotify.com/)  
+4. 📺 [YouTube Data API Key](https://developers.google.com/youtube/v3/getting-started)  
+
+---
+
+## 🚀 Setup Instructions  
+
+### 1️⃣ Clone Repository  
 
 ```bash
 git clone <repository-url>
