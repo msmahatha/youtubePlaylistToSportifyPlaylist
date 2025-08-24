@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube to Spotify Playlist Converter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1db954 0%, #191414 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .logo h1 {
+            color: #1db954;
+            font-size: 2.2em;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.1em;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .step {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-left: 5px solid #1db954;
+        }
+
+        .step-number {
+            background: #1db954;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .step h3 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .step p {
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .input-group {
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #1db954;
+        }
+
+        .btn {
+            background: #1db954;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px;
+        }
+
+        .btn:hover {
+            background: #1ed760;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(29, 185, 84, 0.3);
+        }
+
+        .btn-secondary {
+            background: #191414;
+        }
+
+        .btn-secondary:hover {
+            background: #333;
+        }
+
+        .status {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f1b0b7;
+        }
+
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .feature {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .feature-icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .feature h4 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .feature p {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 20px;
+            }
+            
+            .logo h1 {
+                font-size: 1.8em;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .conversion-form {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #1db954;
+            width: 0%;
+            transition: width 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="logo">
+            <span style="font-size: 2.5em;">🎵</span>
+            <h1>Playlist Converter</h1>
+        </div>
+        <p class="subtitle">
+            Transform your YouTube playlists into Spotify playlists instantly!<br>
+            Simple, fast, and completely free.
+        </p>
+
+        <!-- Status Messages -->
+        <div id="statusMessage" class="status"></div>
+
+        <!-- Main Steps -->
+        <div id="mainSteps">
+            <!-- Step 1: Authentication -->
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3>🔐 Connect Your Spotify Account</h3>
+                <p>First, we need to connect to your Spotify account to create playlists.</p>
+                <button id="loginBtn" class="btn" onclick="loginToSpotify()">
+                    Connect with Spotify
+                </button>
+                <br><br>
+                <button class="btn btn-secondary" onclick="testLogin()" style="font-size: 14px;">
+                    🧪 Test Login (Development)
+                </button>
+            </div>
+
+            <!-- Step 2: Convert Playlist (Hidden initially) -->
+            <div id="conversionStep" class="step hidden">
+                <div class="step-number">2</div>
+                <h3>🎶 Convert Your Playlist</h3>
+                <div class="conversion-form">
+                    <div class="input-group">
+                        <label for="youtubeUrl">YouTube Playlist URL:</label>
+                        <input 
+                            type="url" 
+                            id="youtubeUrl" 
+                            placeholder="https://www.youtube.com/playlist?list=..."
+                            required
+                        >
+                    </div>
+                    <div class="input-group">
+                        <label for="playlistName">New Playlist Name:</label>
+                        <input 
+                            type="text" 
+                            id="playlistName" 
+                            placeholder="My Awesome Playlist"
+                            required
+                        >
+                    </div>
+                    <div class="input-group">
+                        <label>
+                            <input type="checkbox" id="isPublic" style="width: auto; margin-right: 10px;">
+                            Make playlist public
+                        </label>
+                    </div>
+                    <button id="convertBtn" class="btn" onclick="startConversion()">
+                        🚀 Start Conversion
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 3: Progress (Hidden initially) -->
+            <div id="progressStep" class="step hidden">
+                <div class="step-number">3</div>
+                <h3>⏳ Converting Your Playlist</h3>
+                <p id="progressText">Starting conversion...</p>
+                <div class="progress-bar">
+                    <div id="progressFill" class="progress-fill"></div>
+                </div>
+                <p><small>This usually takes 1-3 minutes depending on playlist size.</small></p>
+            </div>
+
+            <!-- Step 4: Success (Hidden initially) -->
+            <div id="successStep" class="step hidden">
+                <div class="step-number">✅</div>
+                <h3>🎉 Conversion Complete!</h3>
+                <p id="successMessage">Your playlist has been successfully created on Spotify!</p>
+                <button class="btn" onclick="resetForm()">Convert Another Playlist</button>
+                <a href="https://open.spotify.com" target="_blank" class="btn btn-secondary">
+                    Open Spotify
+                </a>
+            </div>
+        </div>
+
+        <!-- Features -->
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">⚡</div>
+                <h4>Lightning Fast</h4>
+                <p>Convert playlists in minutes</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🎯</div>
+                <h4>Smart Matching</h4>
+                <p>Intelligent song recognition</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🔒</div>
+                <h4>Secure</h4>
+                <p>OAuth2 authentication</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">💯</div>
+                <h4>Free</h4>
+                <p>Completely free to use</p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>Made with ❤️ for music lovers everywhere</p>
+            <p><small>This tool uses YouTube Data API and Spotify Web API</small></p>
+        </div>
+    </div>
+
+    <script>
+        let currentConversionId = null;
+        let isAuthenticated = false;
+
+        // Check authentication status on page load
+        window.onload = function() {
+            checkAuthStatus();
+        };
+
+        async function checkAuthStatus() {
+            try {
+                const response = await fetch('/auth/user');
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.authenticated) {
+                        isAuthenticated = true;
+                        showConversionForm();
+                        showStatus('✅ Connected to Spotify! Ready to convert playlists.', 'success');
+                    }
+                }
+            } catch (error) {
+                console.log('Not authenticated yet');
+            }
+        }
+
+        function loginToSpotify() {
+            // Check if we're on HTTP localhost and need to redirect to HTTPS
+            if (window.location.protocol === 'http:' && window.location.hostname === 'localhost') {
+                showStatus('🔄 Redirecting to secure connection for Spotify authentication...', 'info');
+                window.open('https://ac7a217f327e.ngrok-free.app/oauth2/authorization/spotify', '_blank');
+            } else {
+                showStatus('🔄 Redirecting to Spotify...', 'info');
+                window.location.href = '/oauth2/authorization/spotify';
+            }
+        }
+
+        async function testLogin() {
+            try {
+                showStatus('🧪 Testing authentication...', 'info');
+                const response = await fetch('/test-auth/login');
+                if (response.ok) {
+                    const result = await response.json();
+                    isAuthenticated = true;
+                    showConversionForm();
+                    showStatus('✅ Test authentication successful! You can now test the conversion form.', 'success');
+                } else {
+                    showStatus('❌ Test authentication failed', 'error');
+                }
+            } catch (error) {
+                showStatus('❌ Test authentication error', 'error');
+            }
+        }
+
+        async function getSecureLoginUrl() {
+            try {
+                showStatus('🔄 Getting secure login URL...', 'info');
+                const response = await fetch('/auth/login-url');
+                if (response.ok) {
+                    const result = await response.json();
+                    window.open(result.secureUrl || result.loginUrl, '_blank');
+                } else {
+                    // Fallback to direct OAuth2 URL
+                    window.location.href = '/oauth2/authorization/spotify';
+                }
+            } catch (error) {
+                // Fallback to direct OAuth2 URL
+                window.location.href = '/oauth2/authorization/spotify';
+            }
+        }
+
+        function showConversionForm() {
+            document.getElementById('conversionStep').classList.remove('hidden');
+            document.getElementById('loginBtn').textContent = '✅ Connected to Spotify';
+            document.getElementById('loginBtn').disabled = true;
+            document.getElementById('loginBtn').style.background = '#28a745';
+        }
+
+        async function startConversion() {
+            const youtubeUrl = document.getElementById('youtubeUrl').value;
+            const playlistName = document.getElementById('playlistName').value;
+            const isPublic = document.getElementById('isPublic').checked;
+
+            // Validation
+            if (!youtubeUrl || !playlistName) {
+                showStatus('❌ Please fill in all required fields', 'error');
+                return;
+            }
+
+            if (!youtubeUrl.includes('youtube.com/playlist')) {
+                showStatus('❌ Please enter a valid YouTube playlist URL', 'error');
+                return;
+            }
+
+            // Show progress
+            document.getElementById('progressStep').classList.remove('hidden');
+            document.getElementById('convertBtn').disabled = true;
+            document.getElementById('convertBtn').textContent = 'Converting...';
+
+            try {
+                // Start conversion
+                const response = await fetch('/api/convertPlaylist', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        youtubePlaylistUrl: youtubeUrl,
+                        spotifyUserId: 'current_user', // Will be determined server-side
+                        playlistName: playlistName,
+                        isPublic: isPublic
+                    })
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    currentConversionId = result.conversionId;
+                    showStatus('🚀 Conversion started successfully!', 'success');
+                    monitorProgress();
+                } else {
+                    const error = await response.json();
+                    showStatus(`❌ Error: ${error.message || 'Failed to start conversion'}`, 'error');
+                    resetConvertButton();
+                }
+            } catch (error) {
+                showStatus('❌ Network error. Please try again.', 'error');
+                resetConvertButton();
+            }
+        }
+
+        async function monitorProgress() {
+            if (!currentConversionId) return;
+
+            try {
+                const response = await fetch(`/api/status/${currentConversionId}`);
+                if (response.ok) {
+                    const status = await response.json();
+                    updateProgress(status);
+
+                    if (status.status === 'COMPLETED' || status.status === 'PARTIAL_SUCCESS') {
+                        showSuccess(status);
+                    } else if (status.status === 'FAILED') {
+                        showStatus(`❌ Conversion failed: ${status.message || 'Unknown error'}`, 'error');
+                        resetConvertButton();
+                    } else {
+                        // Continue monitoring
+                        setTimeout(monitorProgress, 3000);
+                    }
+                } else {
+                    setTimeout(monitorProgress, 3000);
+                }
+            } catch (error) {
+                setTimeout(monitorProgress, 3000);
+            }
+        }
+
+        function updateProgress(status) {
+            const progressText = document.getElementById('progressText');
+            const progressFill = document.getElementById('progressFill');
+
+            let progress = 0;
+            let text = 'Processing...';
+
+            if (status.status === 'IN_PROGRESS') {
+                progress = Math.min((status.tracksProcessed / status.totalTracks) * 100, 90);
+                text = `Processing ${status.tracksProcessed}/${status.totalTracks} tracks...`;
+            } else if (status.status === 'COMPLETED') {
+                progress = 100;
+                text = 'Conversion complete!';
+            }
+
+            progressText.textContent = text;
+            progressFill.style.width = progress + '%';
+        }
+
+        function showSuccess(status) {
+            document.getElementById('successStep').classList.remove('hidden');
+            const successMessage = document.getElementById('successMessage');
+            
+            let message = `Successfully converted ${status.tracksSuccessful} tracks to your Spotify playlist "${status.playlistName}"!`;
+            if (status.tracksFailed > 0) {
+                message += ` (${status.tracksFailed} tracks couldn't be found on Spotify)`;
+            }
+            
+            successMessage.textContent = message;
+            showStatus('🎉 Playlist conversion completed!', 'success');
+        }
+
+        function resetForm() {
+            // Hide steps
+            document.getElementById('progressStep').classList.add('hidden');
+            document.getElementById('successStep').classList.add('hidden');
+            
+            // Reset form
+            document.getElementById('youtubeUrl').value = '';
+            document.getElementById('playlistName').value = '';
+            document.getElementById('isPublic').checked = false;
+            
+            // Reset button
+            resetConvertButton();
+            
+            // Clear status
+            document.getElementById('statusMessage').style.display = 'none';
+            
+            currentConversionId = null;
+        }
+
+        function resetConvertButton() {
+            document.getElementById('convertBtn').disabled = false;
+            document.getElementById('convertBtn').textContent = '🚀 Start Conversion';
+        }
+
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById('statusMessage');
+            statusDiv.textContent = message;
+            statusDiv.className = `status ${type}`;
+            statusDiv.style.display = 'block';
+            
+            // Auto-hide after 5 seconds for info messages
+            if (type === 'info') {
+                setTimeout(() => {
+                    statusDiv.style.display = 'none';
+                }, 5000);
+            }
+        }
+
+        // Handle URL parameters (for OAuth callback)
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('authenticated') === 'true' || urlParams.get('auth') === 'success') {
+            // Give the backend a moment to process the OAuth2 callback
+            setTimeout(() => {
+                checkAuthStatus();
+            }, 1000);
+            showStatus('🔄 Processing authentication...', 'info');
+        } else if (urlParams.get('error')) {
+            showStatus('❌ Authentication failed: ' + urlParams.get('error'), 'error');
+        }
+    </script>
+</body>
+</html>

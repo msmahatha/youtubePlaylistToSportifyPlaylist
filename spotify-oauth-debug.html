@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Spotify OAuth Debug</title>
+</head>
+<body>
+    <h1>Spotify OAuth Debug</h1>
+    <p>Current ngrok URL: <span id="ngrokUrl">Loading...</span></p>
+    <p>Expected redirect URI: <span id="redirectUri">Loading...</span></p>
+    
+    <h2>Test Links:</h2>
+    <div id="testLinks">Loading...</div>
+    
+    <script>
+        // Get the current ngrok URL and build test links
+        fetch('http://localhost:4040/api/tunnels')
+            .then(response => response.json())
+            .then(data => {
+                const ngrokUrl = data.tunnels[0].public_url;
+                document.getElementById('ngrokUrl').textContent = ngrokUrl;
+                
+                const redirectUri = ngrokUrl + '/login/oauth2/code/spotify';
+                document.getElementById('redirectUri').textContent = redirectUri;
+                
+                const clientId = '21404d78bc55495588b8933cc3ae4468';
+                const scope = 'playlist-modify-public playlist-modify-private user-read-private';
+                const state = 'test123';
+                
+                const authUrl = `https://accounts.spotify.com/authorize?response_type=code&client_id=${clientId}&scope=${encodeURIComponent(scope)}&state=${state}&redirect_uri=${encodeURIComponent(redirectUri)}`;
+                
+                document.getElementById('testLinks').innerHTML = `
+                    <p><a href="${authUrl}" target="_blank">Direct Spotify Auth Link</a></p>
+                    <p><a href="${ngrokUrl}/oauth2/authorization/spotify" target="_blank">Spring Security Auth Link</a></p>
+                    <p>Redirect URI to add in Spotify: <code>${redirectUri}</code></p>
+                `;
+            })
+            .catch(error => {
+                document.getElementById('ngrokUrl').textContent = 'Error loading';
+                document.getElementById('redirectUri').textContent = 'Error loading';
+                document.getElementById('testLinks').textContent = 'Error loading ngrok info';
+            });
+    </script>
+</body>
+</html>

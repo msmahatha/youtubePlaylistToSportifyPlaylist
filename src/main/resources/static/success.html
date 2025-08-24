@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Authentication Debug</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background: #f8f9fa; }
+        .container { max-width: 800px; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .success { background: #d4edda; color: #155724; padding: 15px; border-radius: 5px; margin: 20px 0; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; padding: 15px; border-radius: 5px; margin: 20px 0; border: 1px solid #f1b0b7; }
+        .info { background: #d1ecf1; color: #0c5460; padding: 15px; border-radius: 5px; margin: 20px 0; border: 1px solid #bee5eb; }
+        .code { background: #f8f9fa; padding: 10px; border-radius: 4px; font-family: monospace; border: 1px solid #e9ecef; }
+        .button { background: #28a745; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; margin: 10px 5px 10px 0; }
+        .button:hover { background: #218838; }
+        .button.primary { background: #007bff; }
+        .button.primary:hover { background: #0056b3; }
+        h1 { color: #333; }
+        h2 { color: #666; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎵 Authentication Debug Page</h1>
+        
+        <div class="success">
+            <h3>✅ You've reached the success callback!</h3>
+            <p>This means the OAuth2 redirect from Spotify is working correctly.</p>
+        </div>
+        
+        <div class="info">
+            <h3>🔍 Current Status</h3>
+            <p><strong>URL:</strong> <span id="currentUrl"></span></p>
+            <p><strong>Timestamp:</strong> <span id="timestamp"></span></p>
+            <p><strong>User Agent:</strong> <span id="userAgent"></span></p>
+        </div>
+        
+        <h2>📋 Next Steps</h2>
+        
+        <div class="info">
+            <h3>🧪 Test API Endpoints</h3>
+            <p>Now that authentication is working, you can test the playlist conversion API:</p>
+            
+            <a href="/auth/login-url" class="button">🔗 Get Login URL</a>
+            <a href="/api/user" class="button primary">👤 Get User Info</a>
+            <a href="/swagger-ui.html" class="button">📚 API Documentation</a>
+        </div>
+        
+        <div class="success">
+            <h3>🎯 Ready for Playlist Conversion!</h3>
+            <p>Your YouTube to Spotify Playlist Converter is now ready. You can:</p>
+            <ul>
+                <li><strong>Convert playlists</strong> using the <code>/api/convertPlaylist</code> endpoint</li>
+                <li><strong>Check conversion status</strong> with <code>/api/status/{id}</code></li>
+                <li><strong>View your conversions</strong> at <code>/api/conversions</code></li>
+            </ul>
+        </div>
+        
+        <div class="info">
+            <h3>📝 Sample API Request</h3>
+            <div class="code">
+curl -X POST http://localhost:3000/api/convertPlaylist \<br>
+&nbsp;&nbsp;-H "Content-Type: application/json" \<br>
+&nbsp;&nbsp;-H "Cookie: JSESSIONID=YOUR_SESSION_ID" \<br>
+&nbsp;&nbsp;-d '{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"youtubePlaylistUrl": "https://www.youtube.com/playlist?list=YOUR_PLAYLIST_ID",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"spotifyUserId": "your-spotify-user-id",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"playlistName": "My Converted Playlist",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"isPublic": false<br>
+&nbsp;&nbsp;}'
+            </div>
+        </div>
+        
+        <div class="error">
+            <h3>⚠️ If You See "Invalid Authentication Type"</h3>
+            <p>This typically means the OAuth2 token exchange process needs fine-tuning. The important thing is that the redirect is working!</p>
+            <p><strong>Current Status:</strong> Spotify redirect ✅ | Token exchange needs adjustment ⚙️</p>
+        </div>
+        
+    </div>
+    
+    <script>
+        document.getElementById('currentUrl').textContent = window.location.href;
+        document.getElementById('timestamp').textContent = new Date().toLocaleString();
+        document.getElementById('userAgent').textContent = navigator.userAgent.substring(0, 60) + '...';
+    </script>
+</body>
+</html>
