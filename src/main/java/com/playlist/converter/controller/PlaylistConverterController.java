@@ -57,20 +57,32 @@ public class PlaylistConverterController {
                         .body(ConversionResponse.withMessage("User not authenticated with Spotify"));
             }
             
+            // Resolve the actual user ID (handle "current_user" case)
+            String requestedUserId = "current_user".equals(request.getSpotifyUserId()) 
+                    ? currentUserId 
+                    : request.getSpotifyUserId();
+            
             // Check if user has valid token
-            if (!oAuth2TokenService.hasValidToken(request.getSpotifyUserId())) {
+            if (!oAuth2TokenService.hasValidToken(requestedUserId)) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                         .body(ConversionResponse.withMessage("No valid Spotify access token found. Please login again."));
             }
             
             // Ensure the authenticated user matches the request
-            if (!currentUserId.equals(request.getSpotifyUserId())) {
+            if (!currentUserId.equals(requestedUserId)) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN)
                         .body(ConversionResponse.withMessage("Cannot convert playlist for a different user"));
             }
             
-            // Initiate conversion
-            String conversionId = conversionService.initiateConversion(request);
+            // Initiate conversion with resolved user ID
+            ConversionRequest resolvedRequest = new ConversionRequest(
+                request.getYoutubePlaylistUrl(),
+                requestedUserId,
+                request.getPlaylistName(),
+                request.getPlaylistDescription(),
+                request.getIsPublic()
+            );
+            String conversionId = conversionService.initiateConversion(resolvedRequest);
             
             log.info("Conversion initiated with ID: {}", conversionId);
             

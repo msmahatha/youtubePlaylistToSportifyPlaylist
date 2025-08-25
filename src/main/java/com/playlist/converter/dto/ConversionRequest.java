@@ -9,7 +9,7 @@ import jakarta.validation.constraints.Pattern;
 public class ConversionRequest {
     
     @NotBlank(message = "YouTube playlist URL is required")
-    @Pattern(regexp = "^https://www\\.youtube\\.com/playlist\\?list=.*", 
+    @Pattern(regexp = "^https://(www\\.)?(youtube\\.com|youtu\\.be).*(list=|playlist\\?list=).*", 
              message = "Invalid YouTube playlist URL format")
     private String youtubePlaylistUrl;
     

@@ -44,7 +44,7 @@ cd youtube-spotify-converter
 1. Go to [Spotify Developer Dashboard](https://developer.spotify.com/dashboard)
 2. Create a new app
 3. Note down the **Client ID** and **Client Secret**
-4. Add redirect URI: `http://localhost:8080/login/oauth2/code/spotify`
+4. Add redirect URI: `http://localhost:3000/login/oauth2/code/spotify`
 
 ### 3. YouTube API Configuration
 
@@ -83,13 +83,13 @@ mvn clean package
 java -jar target/youtube-spotify-converter-0.0.1-SNAPSHOT.jar
 ```
 
-The application will start on `http://localhost:8080`
+The application will start on `http://localhost:3000`
 
 ## API Documentation
 
 Once the application is running, visit:
-- **Swagger UI**: http://localhost:8080/api/swagger-ui.html
-- **API Docs**: http://localhost:8080/api/api-docs
+- **Swagger UI**: http://localhost:3000/swagger-ui.html
+- **API Docs**: http://localhost:3000/v3/api-docs
 
 ## API Endpoints
 
@@ -110,7 +110,7 @@ Once the application is running, visit:
 
 ```bash
 # Get login URL
-curl http://localhost:8080/api/auth/login-url
+curl http://localhost:3000/auth/user
 
 # Visit the returned URL to login with Spotify
 ```
@@ -118,7 +118,7 @@ curl http://localhost:8080/api/auth/login-url
 ### 2. Convert a Playlist
 
 ```bash
-curl -X POST http://localhost:8080/api/convertPlaylist \
+curl -X POST http://localhost:3000/api/convertPlaylist \
   -H "Content-Type: application/json" \
   -d '{
     "youtubePlaylistUrl": "https://www.youtube.com/playlist?list=PLXyAs_FpoMmQQwv6DOAC7Z4ckOD_Ct7zR",
